@@ -1,3 +1,4 @@
+const modal = new bootstrap.Modal('.modal')
 const formulario = document.querySelector(".inputFlex")
 const inputDescricao = document.querySelector("#inputDescricao");
 const inputDetalhamento = document.querySelector("#inputDetalhamento");
@@ -10,10 +11,6 @@ const idTarefaEdicao = document.querySelector("#idTarefaEdicao");
 const botaoFechar = document.querySelector("#btnFechar")
 const emailLogado = sessionStorage.getItem("logado")
 const dadosDoUsuario = obterUsuarioLogado()
-
-btnFechar.addEventListener('click', function(event) {
-    janelaEdicao.setAttribute("style", "display: none")
-})
 
 formulario.addEventListener('submit', function(event) {
     event.preventDefault()
@@ -37,6 +34,7 @@ formularioEdicao.addEventListener('submit', function (event) {
         id: Number(idTarefaEdicao.innerHTML.replace("#", "")),
         descricao: editarDescricao.value,
         detalhamento: editarDetalhamento.value
+        
     }
     
     const encontrarId = dadosDoUsuario.recados.findIndex(recado => recado.id === novoRecado.id);
@@ -44,7 +42,7 @@ formularioEdicao.addEventListener('submit', function (event) {
     dadosDoUsuario.recados.splice(encontrarId, 1, novoRecado)
     atualizarLocalStorage(dadosDoUsuario)
     obterRecadosDoUsuario(dadosDoUsuario)
-    janelaEdicao.setAttribute("style", "display: none")
+    modal.hide()
 })
 
 function obterUsuarioLogado() {
@@ -80,15 +78,15 @@ function criarRecado(recado) {
             <td>${recado.descricao}</td>
             <td>${recado.detalhamento}</td>
             <td>
-                <button class="botaoExcluir" onclick="excluirRecado(${recado.id})" >Excluir</button>
-                <button class="botaoEditar" onclick="editarRecado(${recado.id})">Editar</button>
+                <button class="botaoExcluir buttonSalvar" onclick="excluirRecado(${recado.id})" >Excluir</button>
+                <button data-bs-toggle="modal" data-bs-target="#editarRecado" class="botaoEditar buttonSalvar" onclick="editarRecado(${recado.id})">Editar</button>
             </td>
         </tr>
     `
 }
 
 function excluirRecado(id) {
-    const confirmacao = confirm('Tem certeza que quer excluir?')
+    exibirModal('Tem certeza que quer excluir?')
     if(confirmacao) {
         // Pegar recado com o id que está no parâmetro dessa função
         const indiceRecado = dadosDoUsuario.recados.findIndex(function (recado) {
@@ -101,12 +99,20 @@ function excluirRecado(id) {
     }
 }
 
+function exibirModal (mensagem) {
+    const pegarModal = document.querySelector('#mensagem')
+    pegarModal.innerText = mensagem
+    modal.show()
+}
+
+
 // Função de alterar título e descrição
 function editarRecado(id) {
+    const idTarefaEdicao = document.querySelector('#idTarefaEdicao')
     const recado = dadosDoUsuario.recados.find(function (recado) {
         return recado.id == id
     })
-    janelaEdicao.setAttribute("style", "display: block")
+
     idTarefaEdicao.innerText = "#" + id
     editarDescricao.value = recado.descricao
     editarDetalhamento.value = recado.detalhamento

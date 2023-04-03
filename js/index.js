@@ -1,3 +1,4 @@
+const modal = new bootstrap.Modal('.modal')
 const formulario = document.querySelector('.formulario')
 formulario.addEventListener('submit', function(evento) {
     evento.preventDefault()
@@ -8,17 +9,11 @@ formulario.addEventListener('submit', function(evento) {
     const contaCriada = pegarContaLocalStorage(email)
     const validacao = validarConta(contaCriada, senha)
     if(validacao) {
-        loginSucesso()
+        
         window.location.href= 'home.html'
         salvarSessionStorage(email)
     }
 })
-
-function loginSucesso () {
-    const toastLiveExample = document.getElementById('liveToast')
-    const toastBootstrap = bootstrap.Toast.getOrCreateInstance(toastLiveExample)
-    toastBootstrap.show()
-}
 
 function pegarContaLocalStorage(email) {
     const contaCriada = localStorage.getItem(email)
@@ -29,19 +24,22 @@ function pegarContaLocalStorage(email) {
 }
 
 function validarConta(conta, senha) {
-    if(!conta) {
-        alert('E-mail ou senha inválidos.')
-        return false
-    } 
-
-    if(conta) {
+    if(conta || !conta) {
         if(conta.senha != senha) {
-            alert('E-mail ou senha incorretos.')
-            return false
+            return exibirModal('Verifique seu e-mail ou senha. Caso não tenha uma conta, crie uma! ;)')
         }
     }
 
     return true
+}
+
+function exibirModal (mensagem) {
+    const pegarModal = document.querySelector('#mensagem')
+    pegarModal.innerText = mensagem
+    modal.show()
+    setTimeout(function () {
+        modal.hide() 
+    } , 4000)
 }
 
 function salvarSessionStorage(email) {
