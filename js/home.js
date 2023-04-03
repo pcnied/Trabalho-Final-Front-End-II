@@ -1,4 +1,7 @@
-const modal = new bootstrap.Modal('.modal')
+const modalEditar = new bootstrap.Modal('#editarRecado')
+const modalApagar = new bootstrap.Modal('#modalApagar')
+const modalLogout = new bootstrap.Modal('#modalLogout')
+const botaoLogout = document.getElementById('botaoLogout')
 const formulario = document.querySelector(".inputFlex")
 const inputDescricao = document.querySelector("#inputDescricao");
 const inputDetalhamento = document.querySelector("#inputDetalhamento");
@@ -11,6 +14,10 @@ const idTarefaEdicao = document.querySelector("#idTarefaEdicao");
 const botaoFechar = document.querySelector("#btnFechar")
 const emailLogado = sessionStorage.getItem("logado")
 const dadosDoUsuario = obterUsuarioLogado()
+
+botaoLogout.addEventListener('click', () => {
+    window.location.href = 'index.html'
+})
 
 formulario.addEventListener('submit', function(event) {
     event.preventDefault()
@@ -25,6 +32,7 @@ formulario.addEventListener('submit', function(event) {
     dadosDoUsuario.recados.push(recado)
     atualizarLocalStorage(dadosDoUsuario)
     criarRecado(recado)
+    formulario.reset()
 })
 
 formularioEdicao.addEventListener('submit', function (event) {
@@ -42,7 +50,7 @@ formularioEdicao.addEventListener('submit', function (event) {
     dadosDoUsuario.recados.splice(encontrarId, 1, novoRecado)
     atualizarLocalStorage(dadosDoUsuario)
     obterRecadosDoUsuario(dadosDoUsuario)
-    modal.hide()
+    modalEditar.hide()
 })
 
 function obterUsuarioLogado() {
@@ -78,16 +86,21 @@ function criarRecado(recado) {
             <td>${recado.descricao}</td>
             <td>${recado.detalhamento}</td>
             <td>
-                <button class="botaoExcluir buttonSalvar" onclick="excluirRecado(${recado.id})" >Excluir</button>
+                <button class="botaoExcluir buttonSalvar" onclick="confirmarExcluir(${recado.id}) ">Excluir</button>
                 <button data-bs-toggle="modal" data-bs-target="#editarRecado" class="botaoEditar buttonSalvar" onclick="editarRecado(${recado.id})">Editar</button>
             </td>
         </tr>
     `
 }
 
-function excluirRecado(id) {
+function confirmarExcluir (id) {
     exibirModal('Tem certeza que quer excluir?')
-    if(confirmacao) {
+    const excluir = document.getElementById('botaoExcluir')
+    excluir.setAttribute('onclick', `excluirRecado(${id})`)
+    
+}
+
+function excluirRecado(id) {
         // Pegar recado com o id que está no parâmetro dessa função
         const indiceRecado = dadosDoUsuario.recados.findIndex(function (recado) {
             return recado.id == id
@@ -96,13 +109,13 @@ function excluirRecado(id) {
         dadosDoUsuario.recados.splice(indiceRecado, 1)
         atualizarLocalStorage(dadosDoUsuario)
         obterRecadosDoUsuario(dadosDoUsuario)
-    }
+        modalApagar.hide()
 }
 
 function exibirModal (mensagem) {
     const pegarModal = document.querySelector('#mensagem')
     pegarModal.innerText = mensagem
-    modal.show()
+    modalApagar.show()
 }
 
 

@@ -10,7 +10,7 @@
     <title>Document</title>
 </head>
 <body>
-    <a href="./index.html"><button class="logout">
+      <a data-bs-toggle="modal" data-bs-target="#modalLogout"><button class="logout">
         <span class="circle" aria-hidden="true">
         <span class="icon arrow"></span>
         </span>
@@ -79,15 +79,35 @@
         </div>
       </div>
 
-      <div class="modal" tabindex="-1">
+      <div id="modalApagar" class="modal" tabindex="-1">
         <div class="modal-dialog">
-          <div class="modal-content">
+          <div class="modal-content bg-dark text-white">
             <div class="modal-header">
               <h5 class="modal-title">Informação</h5>
               <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
               <p id="mensagem"></p>
+            </div>
+            <div class="modal-footer ">
+              <button id="botaoExcluir" class="buttonSalvar">Confirmar</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div id="modalLogout" class="modal" tabindex="-1">
+        <div class="modal-dialog">
+          <div class="modal-content bg-dark text-white">
+            <div class="modal-header">
+              <h5 class="modal-title">Informação</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+              <p>Tem certeza que quer sair?</p>
+            </div>
+            <div class="modal-footer ">
+              <button id="botaoLogout" class="buttonSalvar">Confirmar</button>
             </div>
           </div>
         </div>
